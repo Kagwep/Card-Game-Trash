@@ -29,8 +29,8 @@ impl Deck{
             }
 
         let mut cards_D = &self.cards;
-        println!("{:?}",self.cards);
-        println!("{:?}",self.cards.len());
+       // println!("{:?}",self.cards);
+       // println!("{:?}",self.cards.len());
         
         return cards_D.to_vec();
 
@@ -170,7 +170,7 @@ impl  Players {
         return value_of_card;
     }
     
-    fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>) -> Vec<String>{
+    fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>,mut val_ec: Vec<u8>) -> Vec<String>{
 
         while card_value <= 10{
 
@@ -185,8 +185,12 @@ impl  Players {
                 
             let card_replaced = &self.player[card_value-1];
 
-            println!("current card:{} ",card_replaced);
+            //println!("current card:{} ",card_replaced);
+            let cf = (self.get_card_values(card_replaced)) as u8;
+            
 
+            let z = self.get_card_vec(&com_hidden_cards);
+   
             std::mem::replace(&mut com_hidden_cards[card_value-1], card.to_string());
 
 
@@ -196,22 +200,21 @@ impl  Players {
             card_value = self.get_card_values(card_replaced);
             card = card_replaced.to_string();
 
-
+            let r = (self.get_card_values(&card)) as u8;
+  
             }
 
 
         } 
 
-
-        println!("  current card is {},  turn is over .....",card);
-
         return com_hidden_cards;
 
-        
+        println!("  current card is {},  turn is over .....",card);
 
     }
     
     fn play(&mut self, entry:String, cond:String) -> Vec<String>{
+
 
         let mut hidden_cards:Vec<String> = vec!["X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string()];
         let mut com_hidden_cards:Vec<String> =vec!["Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string(),"Y".to_string()];
@@ -239,7 +242,7 @@ impl  Players {
         if a.len() == 10{
 
              println!(" You are the winner!!!: \n {:?}",hidden_cards);
-             return hidden_cards;
+            return hidden_cards;
         }
 
         if b.len() == 10{
@@ -253,19 +256,18 @@ impl  Players {
      
 
 
-        let mut card =&r_cards.clone()[0];
-   
-        r_cards.remove(0);
 
-        let mut card_c = &r_cards.clone()[0];
 
-        r_cards.remove(0);
-  
  
 
-            
+        println!("the remaining cards: {:?}", r_cards);
+  
         
-            if entry == cond {
+            if entry== cond{
+
+                let mut card =&r_cards.clone()[0];
+   
+                r_cards.remove(0);
                 
 
                 println!("You picked: {}",card);
@@ -274,25 +276,62 @@ impl  Players {
     
                 println!("card value: {}",card_value);
     
-                
-    
-                hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone());
+                let card_x = card_value.clone() as u8;
+
+                if a.contains(&card_x){
+                    println!("spot filled");
+                }
+
+                else{
+
+                    hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),(&a).to_vec());
     
 
-                println!("********************My turn***********************");
+                }
+
+                let mut card_c = &r_cards.clone()[1];
+
+                r_cards.remove(0);
+
+                if b.contains(&card_x){
+                    println!("spot filled");
+                }
+
+                else{
+
+                    println!("********************My turn***********************");
            
-                println!("My cards: {:?}",  com_hidden_cards);
+                    println!("My cards: {:?}",  com_hidden_cards);
 
-                
+                    let cv = self.get_card_values(card_c) as u8;
+
+                    if self.get_card_vec(&com_hidden_cards).contains(&cv){
+
+                        println!("spot also filled");
+
+                    }
+
+                    else{
+
+
+                        println!("Picked card:{}",card_c);
+        
+                        let mut c_card_value = self.get_card_values(&card_c);
+            
+                        
+                        
+                        com_hidden_cards = self.compute(c_card_value,C_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone(),(&b).to_vec());
+            
+
+                    }
     
-                println!("Picked card:{}",card_c);
+                    
+        
+
+
+                }
     
-                let mut c_card_value = self.get_card_values(&card_c);
-    
-                
-                
-                com_hidden_cards = self.compute(c_card_value,C_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone());
-    
+
             }
             else{
     
@@ -304,7 +343,6 @@ impl  Players {
         }
 
     }
-    
 }  
 
 
@@ -330,36 +368,216 @@ mod tests {
         builder
     }
     
-    #[test]
-    fn test_cardDeck(){
 
-        let mut rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
+    fn suit_vec() -> Vec<String>{
         let mut suit=vec!["D".to_string(),"H".to_string(),"S".to_string(),"C".to_string()];
+        return suit;
+     }
+    fn rank_vec() -> Vec<String>{
+        let mut rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
+ 
+        return rank;
+    }
 
-        let mut card = Deck {
-            
-            cards:Vec::new(),
+    fn card_sets() -> Vec<Vec<String>>{
+
+        let mut set1:Vec<String> = Vec::new();
+        let mut set2:Vec<String> = Vec::new();
+        let mut set3:Vec<String> = Vec::new();
+        let mut set4:Vec<String> = Vec::new();
+        let mut set5:Vec<String> = Vec::new();
+        let mut set6:Vec<String> = Vec::new();
+        let mut set7:Vec<String> = Vec::new();
+        let mut set8:Vec<String> = Vec::new();
+        let mut set9:Vec<String> = Vec::new();
+        let mut set10:Vec<String> = Vec::new();
+        let mut set11:Vec<String> = Vec::new();
+        let mut set12:Vec<String> = Vec::new();
+        let mut set13:Vec<String> = Vec::new();
         
-        };
-
-        assert_eq!(card.cardDeck(rank, suit).len(), 52);
+        let mut Vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
+        
+        return Vec_con;
         
     }
 
-    
-    #[test]
-
-    fn test_play(){
-        let mut rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
-        let mut suit=vec!["D".to_string(),"H".to_string(),"S".to_string(),"C".to_string()];
-
-
+    fn card_deck_vecs() -> Vec<Vec<String>>{
+        let mut vec_of_cards:Vec<Vec<String>> = Vec::new();
         let mut card = Deck {
             cards:Vec::new(),
         
         };
 
-        let mut cards_to_deal_unshuffled= card.cardDeck(rank,suit);
+        let mut cards_to_deal_unshuffled= card.cardDeck(rank_vec(), suit_vec());
+        let mut group_cards_vec = cards_to_deal_unshuffled.clone();
+        let mut cards_to_deal = cards_to_deal_unshuffled;
+        cards_to_deal.shuffle( &mut thread_rng());
+        println!("The shuffled deck is: {:?}",cards_to_deal);
+        vec_of_cards.push(group_cards_vec);
+        vec_of_cards.push(cards_to_deal);
+    
+    
+        return vec_of_cards;
+    }
+
+
+
+    fn card_sets_final() -> Vec<Vec<String>>{
+        let mut count_1:usize = 0;
+        
+        let mut vec_of_all_sets :Vec<Vec<String>>= Vec::new();
+        
+        
+        for mut val in card_sets() {
+        
+            let s = &card_deck_vecs()[0][count_1+0];
+            let g = &card_deck_vecs()[0][count_1+13];
+            let h = &card_deck_vecs()[0][count_1+26];
+            let i = &card_deck_vecs()[0][count_1+39];
+        
+        
+             val.push(s.to_string());
+             val.push(g.to_string());
+             val.push(h.to_string());
+             val.push(i.to_string());
+        
+            vec_of_all_sets.push(val);
+            count_1 += 1;
+        
+        }
+
+        return vec_of_all_sets;
+    }
+
+
+    fn dealt_cards() -> Vec<Vec<String>>{
+
+        let mut dealt_cards_players :Vec<Vec<String>>= Vec::new();
+
+        let mut sum:u8 = 0;
+        let mut comp:Vec<String> = Vec::new();
+        let mut play:Vec<String> = Vec::new();
+        let mut rem:Vec<String> = Vec::new();
+        let mut count:u8 = 0;
+        for i in &card_deck_vecs()[1]{
+            if sum<20{
+        
+                if count % 2 == 0 {
+                    play.push(i.to_string());
+
+          
+                }
+                else{
+                    comp.push(i.to_string());
+                    
+                    
+        
+                }
+            }
+        
+            else  {
+                let necs = &card_deck_vecs()[1][sum as usize];
+                rem.push(necs.to_string());
+                
+            }
+           
+            count +=1;
+            sum +=1;
+        
+        } 
+        dealt_cards_players.push((&play).to_vec());
+        dealt_cards_players.push((&comp).to_vec());
+        dealt_cards_players.push((&rem).to_vec());
+
+        println!("{:?}",rem);
+        
+        return dealt_cards_players;
+
+    }
+    fn card_set_up() -> Vec<Vec<String>> {
+
+        let mut card_set_ups_vec :Vec<Vec<String>>= Vec::new();
+
+        let Kings = &card_sets_final()[0];
+        card_set_ups_vec.push(Kings.to_vec());
+        let Queens = &card_sets_final()[1];
+        card_set_ups_vec.push(Queens.to_vec());
+        let Jacks = &card_sets_final()[2];
+        card_set_ups_vec.push(Jacks.to_vec());
+        let Ten = &card_sets_final()[3];
+        card_set_ups_vec.push(Ten.to_vec());
+        let Nine = &card_sets_final()[4];
+        card_set_ups_vec.push(Nine.to_vec());
+        let Eight = &card_sets_final()[5];
+        card_set_ups_vec.push(Eight.to_vec());
+        let Seven = &card_sets_final()[6];
+        card_set_ups_vec.push(Seven.to_vec());
+        let Six = &card_sets_final()[7];
+        card_set_ups_vec.push(Six.to_vec());
+        let Five = &card_sets_final()[8];
+        card_set_ups_vec.push(Five.to_vec());
+        let Fours = &card_sets_final()[9];
+        card_set_ups_vec.push(Fours.to_vec());
+        let Thress = &card_sets_final()[10];
+        card_set_ups_vec.push(Thress.to_vec());
+        let Twos = &card_sets_final()[11];
+        card_set_ups_vec.push(Twos.to_vec());
+        let Aces = &card_sets_final()[12]; 
+        card_set_ups_vec.push(Aces.to_vec());
+        
+
+        return card_set_ups_vec;
+     
+    }
+  
+    fn card_variables() -> Players{
+
+        let mut play = Players{
+            Computer: (&dealt_cards()[1]).to_vec(),
+            player: (&dealt_cards()[0]).to_vec(),
+            remaining_card_deck: (&dealt_cards()[2]).to_vec(),
+            cardvariant13:(&card_set_up()[0]).to_vec(),
+            cardvariant12:(&card_set_up()[1]).to_vec(),
+            cardvariant11:(&card_set_up()[2]).to_vec(),
+            cardvariant10:(&card_set_up()[3]).to_vec(),
+            cardvariant9:(&card_set_up()[4]).to_vec(),
+            cardvariant8:(&card_set_up()[5]).to_vec(),
+            cardvariant7:(&card_set_up()[6]).to_vec(),
+            cardvariant6:(&card_set_up()[7]).to_vec(),
+            cardvariant5:(&card_set_up()[8]).to_vec(),
+            cardvariant4:(&card_set_up()[9]).to_vec(),
+            cardvariant3:(&card_set_up()[10]).to_vec(),
+            cardvariant2:(&card_set_up()[11]).to_vec(),
+            cardvariant1:(&card_set_up()[12]).to_vec(),
+        
+        
+        
+        };
+        return  play;
+
+    }
+    // #[test]
+    // fn test_cardDeck(){
+
+    //     let mut card = Deck {
+            
+    //         cards:Vec::new(),
+        
+    //     };
+
+    //     assert_eq!(card.cardDeck(rank_vec(), suit_vec()).len(), 52);
+        
+    // }      
+     #[test]
+
+    fn test_play(){
+
+        let mut card = Deck {
+            cards:Vec::new(),
+        
+        };
+        
+        let mut cards_to_deal_unshuffled= card.cardDeck(rank_vec(), suit_vec());
         let mut group_cards_vec = cards_to_deal_unshuffled.clone();
         let mut cards_to_deal = cards_to_deal_unshuffled;
         cards_to_deal.shuffle( &mut thread_rng());
@@ -392,31 +610,15 @@ mod tests {
             sum +=1;
         
         }
-        
-        let mut set1:Vec<String> = Vec::new();
-        let mut set2:Vec<String> = Vec::new();
-        let mut set3:Vec<String> = Vec::new();
-        let mut set4:Vec<String> = Vec::new();
-        let mut set5:Vec<String> = Vec::new();
-        let mut set6:Vec<String> = Vec::new();
-        let mut set7:Vec<String> = Vec::new();
-        let mut set8:Vec<String> = Vec::new();
-        let mut set9:Vec<String> = Vec::new();
-        let mut set10:Vec<String> = Vec::new();
-        let mut set11:Vec<String> = Vec::new();
-        let mut set12:Vec<String> = Vec::new();
-        let mut set13:Vec<String> = Vec::new();
-        
-        let mut Vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
-        
-        
-        
+
+        println!("The remaining cards: {:?}",rem);
+            
         let mut count_1:usize = 0;
         
         let mut vec_of_all_sets :Vec<Vec<String>>= Vec::new();
         
         
-        for mut val in Vec_con {
+        for mut val in card_sets() {
         
             let s = &group_cards_vec[count_1+0];
             let g = &group_cards_vec[count_1+13];
@@ -475,281 +677,32 @@ mod tests {
         
         let cond:String = String::from("1") ;
         let entry:String = String::from("1") ;
-
-        assert_eq!(ply.play(entry,cond).len(), 10);
-        
-
+        assert_eq!(ply.play(entry,cond).len(), 11);
 
     }
 
 
-    #[test]
-    fn  test_get_card_vec(){
+    // #[test]
+    // fn  test_get_card_vec(){
 
-        let player1 = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
-        
-        let mut rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
-        let mut suit=vec!["D".to_string(),"H".to_string(),"S".to_string(),"C".to_string()];
+    //     let player1 = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
 
+    //     assert_eq!(card_variables().get_card_vec(&player1).len(), 10);
 
-        let mut card = Deck {
-            cards:Vec::new(),
-        
-        };
+    //     }
 
-        let mut cards_to_deal_unshuffled= card.cardDeck(rank,suit);
-        let mut group_cards_vec = cards_to_deal_unshuffled.clone();
-        let mut cards_to_deal = cards_to_deal_unshuffled;
-        cards_to_deal.shuffle( &mut thread_rng());
-        
-        let mut sum:u8 = 0;
-        let mut comp:Vec<String> = Vec::new();
-        let mut play:Vec<String> = Vec::new();
-        let mut upc = String::from("");
-        let mut rem:Vec<String> = Vec::new();
-        let mut count:u8 = 0;
-        for i in &cards_to_deal{
-            if sum<20{
-        
-                if count % 2 == 0 {
-                    play.push(i.to_string());
-          
-                }
-                else{
-                    comp.push(i.to_string());
-        
-                }
-            }
-        
-            else  {
-                let necs = &cards_to_deal[sum as usize];
-                rem.push(necs.to_string());
-            }
-           
-            count +=1;
-            sum +=1;
-        
-        }
-        
-        let mut set1:Vec<String> = Vec::new();
-        let mut set2:Vec<String> = Vec::new();
-        let mut set3:Vec<String> = Vec::new();
-        let mut set4:Vec<String> = Vec::new();
-        let mut set5:Vec<String> = Vec::new();
-        let mut set6:Vec<String> = Vec::new();
-        let mut set7:Vec<String> = Vec::new();
-        let mut set8:Vec<String> = Vec::new();
-        let mut set9:Vec<String> = Vec::new();
-        let mut set10:Vec<String> = Vec::new();
-        let mut set11:Vec<String> = Vec::new();
-        let mut set12:Vec<String> = Vec::new();
-        let mut set13:Vec<String> = Vec::new();
-        
-        let mut Vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
-        
-        
-        
-        let mut count_1:usize = 0;
-        
-        let mut vec_of_all_sets :Vec<Vec<String>>= Vec::new();
-        
-        
-        for mut val in Vec_con {
-        
-            let s = &group_cards_vec[count_1+0];
-            let g = &group_cards_vec[count_1+13];
-            let h = &group_cards_vec[count_1+26];
-            let i = &group_cards_vec[count_1+39];
-        
-        
-             val.push(s.to_string());
-             val.push(g.to_string());
-             val.push(h.to_string());
-             val.push(i.to_string());
-        
-            vec_of_all_sets.push(val);
-            count_1 += 1;
-        
-        }
-        
-        let Kings = &vec_of_all_sets[0];
-        let Queens = &vec_of_all_sets[1];
-        let Jacks = &vec_of_all_sets[2];
-        let Ten = &vec_of_all_sets[3];
-        let Nine = &vec_of_all_sets[4];
-        let Eight = &vec_of_all_sets[5];
-        let Seven = &vec_of_all_sets[6];
-        let Six = &vec_of_all_sets[7];
-        let Five = &vec_of_all_sets[8];
-        let Fours = &vec_of_all_sets[9];
-        let Thress = &vec_of_all_sets[10];
-        let Twos = &vec_of_all_sets[11];
-        let Aces = &vec_of_all_sets[12]; 
-        
-        
-        
-        
-        let mut play = Players{
-            Computer:comp,
-            player:play,
-            remaining_card_deck:rem,
-            cardvariant13:Kings.to_vec(),
-            cardvariant12:Queens.to_vec(),
-            cardvariant11:Jacks.to_vec(),
-            cardvariant10:Ten.to_vec(),
-            cardvariant9:Nine.to_vec(),
-            cardvariant8:Eight.to_vec(),
-            cardvariant7:Seven.to_vec(),
-            cardvariant6:Six.to_vec(),
-            cardvariant5:Five.to_vec(),
-            cardvariant4:Fours.to_vec(),
-            cardvariant3:Thress.to_vec(),
-            cardvariant2:Twos.to_vec(),
-            cardvariant1:Aces.to_vec(),
-        
-        
-        
-        };
-        assert_eq!(play.get_card_vec(&player1).len(), 10);
+    // #[test]
+    // fn  test_get_card_values(){
+    
+    //     let mut card_picked:String = String::from("2D");
 
-        }
+    //     assert_eq!(card_variables().get_card_values(&card_picked), 2);
 
-    #[test]
-    fn  test_get_card_values(){
-        let mut rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
-        let mut suit=vec!["D".to_string(),"H".to_string(),"S".to_string(),"C".to_string()];
-        let mut card_picked:String = String::from("2D");
+    //     }
 
-
-        let mut card = Deck {
-            cards:Vec::new(),
-        
-        };
-
-
-        let mut cards_to_deal_unshuffled= card.cardDeck(rank,suit);
-        let mut group_cards_vec = cards_to_deal_unshuffled.clone();
-        let mut cards_to_deal = cards_to_deal_unshuffled.clone();
-        cards_to_deal.shuffle( &mut thread_rng());
-        let mut sum:u8 = 0;
-        let mut comp:Vec<String> = Vec::new();
-        let mut play:Vec<String> = Vec::new();
-        let mut upc = String::from("");
-        let mut rem:Vec<String> = Vec::new();
-        let mut count:u8 = 0;
-        for i in &cards_to_deal{
-            if sum<20{
-        
-                if count % 2 == 0 {
-                    play.push(i.to_string());
-          
-                }
-                else{
-                    comp.push(i.to_string());
-        
-                }
-            }
-        
-            else  {
-                let necs = &cards_to_deal[sum as usize];
-                rem.push(necs.to_string());
-            }
-           
-            count +=1;
-            sum +=1;
-        
-        }
-        
-        let mut set1:Vec<String> = Vec::new();
-        let mut set2:Vec<String> = Vec::new();
-        let mut set3:Vec<String> = Vec::new();
-        let mut set4:Vec<String> = Vec::new();
-        let mut set5:Vec<String> = Vec::new();
-        let mut set6:Vec<String> = Vec::new();
-        let mut set7:Vec<String> = Vec::new();
-        let mut set8:Vec<String> = Vec::new();
-        let mut set9:Vec<String> = Vec::new();
-        let mut set10:Vec<String> = Vec::new();
-        let mut set11:Vec<String> = Vec::new();
-        let mut set12:Vec<String> = Vec::new();
-        let mut set13:Vec<String> = Vec::new();
-        
-        let mut Vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
-        
-        
-        
-        let mut count_1:usize = 0;
-        
-        let mut vec_of_all_sets :Vec<Vec<String>>= Vec::new();
-        
-        for mut val in Vec_con {
-        
-            let s = &group_cards_vec[count_1+0];
-            let g = &group_cards_vec[count_1+13];
-            let h = &group_cards_vec[count_1+26];
-            let i = &group_cards_vec[count_1+39];
-        
-        
-             val.push(s.to_string());
-             val.push(g.to_string());
-             val.push(h.to_string());
-             val.push(i.to_string());
-        
-            vec_of_all_sets.push(val);
-            count_1 += 1;
-        
-        }
-
-
-        
-        let Kings = &vec_of_all_sets[0];
-        let Queens = &vec_of_all_sets[1];
-        let Jacks = &vec_of_all_sets[2];
-        let Ten = &vec_of_all_sets[3];
-        let Nine = &vec_of_all_sets[4];
-        let Eight = &vec_of_all_sets[5];
-        let Seven = &vec_of_all_sets[6];
-        let Six = &vec_of_all_sets[7];
-        let Five = &vec_of_all_sets[8];
-        let Fours = &vec_of_all_sets[9];
-        let Thress = &vec_of_all_sets[10];
-        let Twos = &vec_of_all_sets[11];
-        let Aces = &vec_of_all_sets[12]; 
-        
-        
-        
-        let mut plays = Players{
-            Computer:comp,
-            player:play,
-            remaining_card_deck:rem,
-            cardvariant13:Kings.to_vec(),
-            cardvariant12:Queens.to_vec(),
-            cardvariant11:Jacks.to_vec(),
-            cardvariant10:Ten.to_vec(),
-            cardvariant9:Nine.to_vec(),
-            cardvariant8:Eight.to_vec(),
-            cardvariant7:Seven.to_vec(),
-            cardvariant6:Six.to_vec(),
-            cardvariant5:Five.to_vec(),
-            cardvariant4:Fours.to_vec(),
-            cardvariant3:Thress.to_vec(),
-            cardvariant2:Twos.to_vec(),
-            cardvariant1:Aces.to_vec(),
-
-
-            
-        
-        
-        
-        };
-
-        assert_eq!(plays.get_card_values(&card_picked), 2);
-
-        }
-
-    #[test]
-    fn  play(){
-        }
+    // #[test]
+    // fn  test_compute(){
+    //     }
 
 
  
