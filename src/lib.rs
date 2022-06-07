@@ -221,6 +221,7 @@ impl  Players {
         let mut done_card:Vec<usize> = Vec::new();
         let mut  C_done_card:Vec<usize> = Vec::new();
         let mut r_cards = self.remaining_card_deck.clone();
+        let mut played_cards: Vec<String> = Vec::new();
 
         println!("Initial set player: {:?}",hidden_cards);
         println!("Initial set Computer: {:?}",com_hidden_cards);
@@ -236,13 +237,15 @@ impl  Players {
         
         println!("sorted:{:?}",a);
         println!("sorted:{:?}",b);
+
+        
         
  
 
         if a.len() == 10{
 
              println!(" You are the winner!!!: \n {:?}",hidden_cards);
-            return hidden_cards;
+             return hidden_cards;
         }
 
         if b.len() == 10{
@@ -252,15 +255,12 @@ impl  Players {
        }
 
 
-        
-     
-
-
-
-
- 
-
         println!("the remaining cards: {:?}", r_cards);
+
+           if r_cards.len() == 0{
+               played_cards.shuffle( &mut thread_rng());
+               r_cards=(&played_cards).to_vec();
+           }
   
         
             if entry== cond{
@@ -278,23 +278,50 @@ impl  Players {
     
                 let card_x = card_value.clone() as u8;
 
+                if card_value > 10{
+                    played_cards.push((&card).to_string());
+                }
+
+
                 if a.contains(&card_x){
                     println!("spot filled");
+                    played_cards.push((&card).to_string());
                 }
 
                 else{
 
-                    hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),(&a).to_vec());
+                    let ci = self.get_card_values(card) as u8;
+
+                    if self.get_card_vec(&hidden_cards).contains(&ci){
+
+                        println!("spot also filled");
+                        played_cards.push((&card).to_string());
+
+                    }
+                    else{
+
+
+                        hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),(&a).to_vec());
     
+
+                    }
 
                 }
 
-                let mut card_c = &r_cards.clone()[1];
+                let mut card_c = &r_cards.clone()[0];
 
                 r_cards.remove(0);
 
-                if b.contains(&card_x){
+                let mut card_value = self.get_card_values(&card_c);
+    
+                println!("card value: {}",card_value);
+    
+                let card_y = card_value.clone() as u8;
+
+                if b.contains(&card_y){
                     println!("spot filled");
+                    played_cards.push((&card_c).to_string());
+
                 }
 
                 else{
@@ -308,6 +335,7 @@ impl  Players {
                     if self.get_card_vec(&com_hidden_cards).contains(&cv){
 
                         println!("spot also filled");
+                        played_cards.push((&card_c).to_string());
 
                     }
 
@@ -325,9 +353,6 @@ impl  Players {
 
                     }
     
-                    
-        
-
 
                 }
     
@@ -677,32 +702,32 @@ mod tests {
         
         let cond:String = String::from("1") ;
         let entry:String = String::from("1") ;
-        assert_eq!(ply.play(entry,cond).len(), 11);
+        assert_eq!(ply.play(entry,cond).len(), 10);
 
     }
 
 
-    // #[test]
-    // fn  test_get_card_vec(){
+    #[test]
+    fn  test_get_card_vec(){
 
-    //     let player1 = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
+        let player1 = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
 
-    //     assert_eq!(card_variables().get_card_vec(&player1).len(), 10);
+        assert_eq!(card_variables().get_card_vec(&player1).len(), 10);
 
-    //     }
+        }
 
-    // #[test]
-    // fn  test_get_card_values(){
+    #[test]
+    fn  test_get_card_values(){
     
-    //     let mut card_picked:String = String::from("2D");
+        let mut card_picked:String = String::from("2D");
 
-    //     assert_eq!(card_variables().get_card_values(&card_picked), 2);
+        assert_eq!(card_variables().get_card_values(&card_picked), 2);
 
-    //     }
+        }
 
-    // #[test]
-    // fn  test_compute(){
-    //     }
+    #[test]
+    fn  test_compute(){
+        }
 
 
  
