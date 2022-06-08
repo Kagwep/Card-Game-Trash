@@ -6,38 +6,44 @@ use near_sdk::near_bindgen;
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
+
+// Struck that holds the card deck
 struct  Deck{
     cards: Vec<String>,
 
 }
 
 #[near_bindgen]
+// Generating card deck of 52 cards
 impl Deck{
+    // argument rank will be the rank of the 13 cards: King, Queen, Jack, 10, 9, 8, 7, 6, 5, 4, 3, 2, Ace
+    // argument suit passes the suits of the cards: Diamond, King, Queen, Jack
     fn cardDeck(&mut self, rank:Vec<String>, suit:Vec<String>) -> Vec<String>{
 
-
+            // loops four times per suit
             for s in 0..4{
+                // assing the ranks the suit
                 for r in 0..13{
-                
+                    //get the suit form the vec containing the suits
                     let mut news = String::from(&rank[r]);
+                    //get the rank and concatinate the suit to give it the suit
                     news.push_str(&suit[s]);
-
+                    // push the card to the card deck
                     self.cards.push(news);
                    
 
                 }
             }
-
+            //creat a vec of srings
         let mut cards_D = &self.cards;
-       // println!("{:?}",self.cards);
-       // println!("{:?}",self.cards.len());
-        
+        //return the vec
         return cards_D.to_vec();
 
     }
 }
 
 #[near_bindgen]
+// dealt cards and their classifications
 struct Players{
     Computer:Vec<String>,
     player:Vec<String>,
@@ -49,9 +55,13 @@ struct Players{
 }
 
 #[near_bindgen]
+// contract 
 impl  Players {
+    // funtion returns the value equivalent  of the given vec of cards (computer || player)
     fn get_card_vec(&self, player:&Vec<String>) -> Vec<u8>{
+        //vec to be returned
         let mut Decision_vec:Vec<u8> = Vec::new();
+        // checks 
         for c in player{
             if self.cardvariant13.contains(&c){
                 Decision_vec.push(13);
