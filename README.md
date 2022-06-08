@@ -24,7 +24,7 @@ For a better understanding please visist [Trash Game Rules](https://playingcardd
 
 ### Getting started
 
-The first objective  is to get a deck of cards with 52 cards:
+The first objective  is to get a deck of cards with 52 cards and deal the cards:
 
 1. Function that gets the deck of card.
 
@@ -33,8 +33,9 @@ The first objective  is to get a deck of cards with 52 cards:
 
 3. The code shuffles and deal the cards giving each player a set 10 of cards and noting the remaining card deck. (players - Computer and user):
 
+Playing the game 
 
-4. By following the rules of the game the code impliments the game play and returns the winner of the round.
+ 1. By following the rules of the game the code impliments the game play and returns the winner of the round.
  
 
 
