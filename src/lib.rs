@@ -180,23 +180,23 @@ impl  Players {
         return value_of_card;
     }
     
-    fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>,mut val_ec: Vec<u8>) -> Vec<String>{
+    fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>,player_turn:Vec<String>) -> Vec<String>{
 
         while card_value <= 10{
 
 
             if done_card.contains(&card_value){
-                card_value = 15;
-                println!("You aready filled that spot")
+                println!("You aready filled that spot");
+                return com_hidden_cards;
             }
 
             else{
 
                 
-            let card_replaced = &self.player[card_value-1];
+            let card_replaced = &player_turn[card_value-1];
 
             //println!("current card:{} ",card_replaced);
-            let cf = (self.get_card_values(card_replaced)) as u8;
+            let cf = (self.get_card_values(&card_replaced)) as u8;
             
 
             let z = self.get_card_vec(&com_hidden_cards);
@@ -207,7 +207,7 @@ impl  Players {
             println!("updated cards: {:?}",com_hidden_cards);
 
             done_card.push(card_value);
-            card_value = self.get_card_values(card_replaced);
+            card_value = self.get_card_values(&card_replaced);
             card = card_replaced.to_string();
 
             let r = (self.get_card_values(&card)) as u8;
@@ -218,9 +218,6 @@ impl  Players {
         } 
 
         return com_hidden_cards;
-
-        println!("  current card is {},  turn is over .....",card);
-
     }
     
     fn play(&mut self, entry:String, cond:String) -> Vec<String>{
@@ -236,7 +233,6 @@ impl  Players {
         println!("Initial set player: {:?}",hidden_cards);
         println!("Initial set Computer: {:?}",com_hidden_cards);
         
-        let counter = 1;
 
      loop{
 
@@ -270,6 +266,7 @@ impl  Players {
            if r_cards.len() == 0{
                played_cards.shuffle( &mut thread_rng());
                r_cards=(&played_cards).to_vec();
+               println!("Asiigned")
            }
   
         
@@ -311,12 +308,14 @@ impl  Players {
                     else{
 
 
-                        hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),(&a).to_vec());
+                        hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),self.player.clone());
     
 
                     }
 
                 }
+
+                println!("The collected cards: {:?}",played_cards);
 
                 let mut card_c = &r_cards.clone()[0];
 
@@ -358,7 +357,7 @@ impl  Players {
             
                         
                         
-                        com_hidden_cards = self.compute(c_card_value,C_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone(),(&b).to_vec());
+                        com_hidden_cards = self.compute(c_card_value,C_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone(),self.Computer.clone());
             
 
                     }
@@ -591,18 +590,18 @@ mod tests {
         return  play;
 
     }
-    // #[test]
-    // fn test_cardDeck(){
+    #[test]
+    fn test_cardDeck(){
 
-    //     let mut card = Deck {
+        let mut card = Deck {
             
-    //         cards:Vec::new(),
+            cards:Vec::new(),
         
-    //     };
+        };
 
-    //     assert_eq!(card.cardDeck(rank_vec(), suit_vec()).len(), 52);
+        assert_eq!(card.cardDeck(rank_vec(), suit_vec()).len(), 52);
         
-    // }      
+    }      
      #[test]
 
     fn test_play(){
@@ -712,7 +711,7 @@ mod tests {
         
         let cond:String = String::from("1") ;
         let entry:String = String::from("1") ;
-        assert_eq!(ply.play(entry,cond).len(), 10);
+        assert_eq!(card_variables().play(entry,cond).len(), 10);
 
     }
 
@@ -737,6 +736,16 @@ mod tests {
 
     #[test]
     fn  test_compute(){
+       
+        let card_value:usize = 8;
+        let  done_card:Vec<usize> = vec![1,2,3,4];
+        let card:String = String::from("8D");
+        let com_hidden_cards:Vec<String> = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
+        
+        let check_for = card_variables().compute(card_value,done_card,card.clone(),com_hidden_cards,card_variables().player);
+       
+        assert_eq!( check_for[7], card);
+
         }
 
 
