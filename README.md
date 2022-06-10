@@ -43,7 +43,7 @@ Playing the game
  1. By following the rules of the game the code impliments the game play and returns the winner of the round.
  
 
-    ![card deal](fedts.PNg)
+    ![card deal](images/fedts.PNg)
 
 **Get more info at:**
 
