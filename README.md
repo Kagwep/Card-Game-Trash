@@ -28,17 +28,22 @@ The first objective  is to get a deck of cards with 52 cards and deal the cards:
 
 1. Function that gets the deck of card.
 
+    ![card deck](deck.PNg)
 
 2. To process the cards we will use their corresponding ranks values. The standard card rankings, [from highest to lowest, are: King, Queen, Jack, 10, 9, 8, 7, 6, 5, 4, 3, 2, Ace](https://www.pokerzone.com/dictionary/ranks). struct Cardvariant 1- 13 holds the ranks.
 
+    ![card values](valvec.PNg)
+
 3. The code shuffles and deal the cards giving each player a set 10 of cards and noting the remaining card deck. (players - Computer and user):
+
+    ![card deal](vsdr.PNg)
 
 Playing the game 
 
  1. By following the rules of the game the code impliments the game play and returns the winner of the round.
  
 
-
+    ![card deal](fedts.PNg)
 
 **Get more info at:**
 
