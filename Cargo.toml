@@ -1,5 +1,5 @@
 [package]
-name = "rust-template"
+name = "Trash-Card-game"
 version = "0.1.0"
 authors = ["Peter kagwe <peterkagwegmail.com"]
 edition = "2018"
@@ -9,7 +9,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 near-sdk = "4.0.0-pre.4"
-rand = "0.7.3"
+
 
 [profile.release]
 codegen-units = 1

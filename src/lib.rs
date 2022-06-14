@@ -1,8 +1,7 @@
 use std::vec;
-use rand::thread_rng;
-use rand::seq::SliceRandom;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::near_bindgen;
+use std::collections::HashSet;
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
@@ -140,7 +139,7 @@ impl  Players {
      //This will ensure that the player knows when the player has already used a spot in their deck of cards
     fn get_card_values(&self, card_picked:&String) -> usize{
         // value of card is return
-        let mut value_of_card:usize = 0;
+        let value_of_card:usize;
         // checks card value form Ace - King
             if self.cardvariant13.contains(card_picked){
                 value_of_card = 13;
@@ -219,7 +218,7 @@ impl  Players {
             //gets card whose position was taken
             let card_replaced = &player_turn[card_value-1];
             // replaces the vec of cards with an updated one eg replaces X with Ace
-            std::mem::replace(&mut com_hidden_cards[card_value-1], card.to_string());
+            com_hidden_cards[card_value-1] = card.to_string();
             // marks card as aready delt
             done_card.push(card_value);
             card_value = self.get_card_values(&card_replaced);
@@ -247,6 +246,9 @@ impl  Players {
         let mut r_cards = self.remaining_card_deck.clone();
         //this vector collects cards that have aready been used, picked but not used
         let mut played_cards: Vec<String> = Vec::new();
+        println!(" You are the computer!!!: \n {:?}",self.computer);
+        println!(" You are the player!!!: \n {:?}",self.player);
+        println!(" You are the remainder!!!: \n {:?}",self.remaining_card_deck);
 
     // loop that makes sure the game continues untill a winner is found
      loop{
@@ -271,7 +273,8 @@ impl  Players {
        // incase the remaining cards after dealing are used during game play, 
         if r_cards.len() == 1 || r_cards.len() == 0 {
             //unused cards collected are picked and shuffled
-            played_cards.shuffle( &mut thread_rng());
+            let shuffled_c: HashSet<String> =  played_cards.into_iter().collect();
+            played_cards = shuffled_c.into_iter().collect();
             //assigned to reamaing cards
             r_cards=(&played_cards).to_vec();
 
@@ -300,6 +303,7 @@ impl  Players {
                     played_cards.push((&card).to_string());
                 }
 
+                println!("Remaining card deck is: {:?}",r_cards);
                 // if card of the same rank has been used , next players round
                 if a.contains(&card_x){
                     println!("spot filled");
@@ -399,7 +403,7 @@ mod tests {
     
    //defines the suits of the cards
     fn suit_vec() -> Vec<String>{
-        let suit=vec!["D".to_string(),"H".to_string(),"S".to_string(),"C".to_string()];
+        let suit=vec![ "\u{2666}".to_string(), "\u{2665}".to_string(), "\u{2660}".to_string() , "\u{2663}".to_string()];
         return suit;
      }
     // defines the ranks of the cards
@@ -441,10 +445,14 @@ mod tests {
         let cards_to_deal_unshuffled= card.card_deck(rank_vec(), suit_vec());
         let  group_cards_vec = cards_to_deal_unshuffled.clone();
         let mut cards_to_deal = cards_to_deal_unshuffled;
-        cards_to_deal.shuffle( &mut thread_rng());
-        println!("The shuffled deck is: {:?}",cards_to_deal);
+        let shuffled: HashSet<String> = cards_to_deal.into_iter().collect();
+        cards_to_deal = shuffled.into_iter().collect();
+        // println!("the vector of ordered is: {:?}",group_cards_vec.clone());
+        // println!("the vector of unorderdordered is: {:?}",cards_to_deal.clone());
         vec_of_cards.push(group_cards_vec);
         vec_of_cards.push(cards_to_deal);
+
+
     
     
         return vec_of_cards;
@@ -515,6 +523,9 @@ mod tests {
             sum +=1;
         
         } 
+        println!("The vector of play is: {:?}",play.clone());
+        println!("The vector of comp is: {:?}",comp.clone());
+        println!("The vector of rem is: {:?}",rem.clone());
         dealt_cards_players.push((&play).to_vec());
         dealt_cards_players.push((&comp).to_vec());
         dealt_cards_players.push((&rem).to_vec());
@@ -602,7 +613,7 @@ mod tests {
     #[test]
     fn  test_get_card_vec(){
 
-        let player1 = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
+        let player1 = vec!["10\u{2665}".to_string(), "A\u{2666}".to_string(), "5\u{2666}".to_string(), "6\u{2665}".to_string(), "4\u{2660}".to_string(), "2\u{2660}".to_string(), "Q\u{2663}".to_string(), "K\u{2666}".to_string(), "4\u{2665}".to_string(), "A\u{2665}".to_string()];
 
         assert_eq!(card_variables().get_card_vec(&player1).len(), 10);
 
@@ -611,7 +622,8 @@ mod tests {
     #[test]
     fn  test_get_card_values(){
     
-        let card_picked:String = String::from("2D");
+        let card_picked:String = String::from("2\u{2666}");
+        
 
         assert_eq!(card_variables().get_card_values(&card_picked), 2);
 
@@ -644,7 +656,8 @@ mod tests {
         let cards_to_deal_unshuffled= card.card_deck(rank_vec(), suit_vec());
         let group_cards_vec = cards_to_deal_unshuffled.clone();
         let mut cards_to_deal = cards_to_deal_unshuffled;
-        cards_to_deal.shuffle( &mut thread_rng());
+        let shuffled: HashSet<String> = cards_to_deal.into_iter().collect();
+        cards_to_deal = shuffled.into_iter().collect();
         
         let mut sum:u8 = 0;
         let mut comp:Vec<String> = Vec::new();
