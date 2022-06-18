@@ -634,8 +634,8 @@ mod tests {
        
         let card_value:usize = 8;
         let  done_card:Vec<usize> = vec![1,2,3,4];
-        let card:String = String::from("8D");
-        let com_hidden_cards:Vec<String> = vec!["10H".to_string(), "AD".to_string(), "5D".to_string(), "6H".to_string(), "4S".to_string(), "2S".to_string(), "QC".to_string(), "KD".to_string(), "4H".to_string(), "AH".to_string()];
+        let card:String = String::from("8\u{2666}");
+        let com_hidden_cards:Vec<String> = vec!["10\u{2665}".to_string(), "A\u{2666}".to_string(), "5\u{2666}".to_string(), "6\u{2665}".to_string(), "4\u{2660}".to_string(), "2\u{2660}".to_string(), "Q\u{2663}".to_string(), "K\u{2666}".to_string(), "4\u{2665}".to_string(), "A\u{2665}".to_string()];
         
         let check_for = card_variables().compute(card_value,done_card,card.clone(),com_hidden_cards,card_variables().player);
        
