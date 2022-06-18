@@ -44,8 +44,10 @@ impl Deck{
     }
 }
 
-#[near_bindgen]
+
 // dealt cards and their classifications
+#[near_bindgen]
+#[derive(Default, BorshDeserialize, BorshSerialize)]
 struct Players{
     computer:Vec<String>,
     player:Vec<String>,
