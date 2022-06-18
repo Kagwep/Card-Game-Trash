@@ -15,9 +15,10 @@ struct  Deck{
 #[near_bindgen]
 // Generating card deck of 52 cards
 impl Deck{
+    
     // argument rank will be the rank of the 13 cards: King, Queen, Jack, 10, 9, 8, 7, 6, 5, 4, 3, 2, Ace
     // argument suit passes the suits of the cards: Diamond, King, Queen, Jack
-    fn card_deck(&mut self, rank:Vec<String>, suit:Vec<String>) -> Vec<String>{
+    pub fn card_deck(&mut self, rank:Vec<String>, suit:Vec<String>) -> Vec<String>{
 
             // loops four times per suit
             for s in 0..4{
@@ -57,7 +58,7 @@ struct Players{
 // contract 
 impl  Players {
     // funtion returns the value equivalent  of the given vec of cards (computer || player)
-    fn get_card_vec(&self, player:&Vec<String>) -> Vec<u8>{
+    pub fn get_card_vec(&self, player:&Vec<String>) -> Vec<u8>{
         //vec to be returned
         let mut decision_vec:Vec<u8> = Vec::new();
         // checks
@@ -137,7 +138,7 @@ impl  Players {
 
      // This function helps to get the value of an individual card picked from the remaining card deck
      //This will ensure that the player knows when the player has already used a spot in their deck of cards
-    fn get_card_values(&self, card_picked:&String) -> usize{
+    pub fn get_card_values(&self, card_picked:&String) -> usize{
         // value of card is return
         let value_of_card:usize;
         // checks card value form Ace - King
@@ -199,7 +200,7 @@ impl  Players {
         return value_of_card;
     }
     
-    fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>,player_turn:Vec<String>) -> Vec<String>{
+    pub fn compute(&self,mut card_value:usize,mut done_card:Vec<usize>,mut card:String,mut com_hidden_cards:Vec<String>,player_turn:Vec<String>) -> Vec<String>{
         // In Trash, King, Queen and Jack are wild cards. Each time a player draws one of this card from the deck the players turn end
         // cards King, Queen and Jack were assigned Valeues 13,12 and 11 for this purpose
         //while loop will not execute when any of the cards mention is picked.
@@ -233,7 +234,7 @@ impl  Players {
         return com_hidden_cards;
     }
     
-    fn play(&mut self, entry:String, cond:String) -> Vec<String>{
+    pub fn play(&mut self, entry:String, cond:String) -> Vec<String>{
 
         // Hidden cards mimicing cards placed face down 
         //represents cards assigned to players
