@@ -1,5 +1,6 @@
 use std::vec;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::serde::{Serialize, Deserialize};
 use near_sdk::{near_bindgen, log};
 use std::collections::HashSet;
 use near_sdk::env;
@@ -47,7 +48,8 @@ impl Deck{
 
 // dealt cards and their classifications
 #[near_bindgen]
-#[derive(Default, BorshDeserialize, BorshSerialize)]
+#[derive(Default, BorshDeserialize, BorshSerialize, Debug, Serialize, Deserialize)]
+#[serde(crate="near_sdk::serde")]
 struct Players{
     computer:Vec<String>,
     player:Vec<String>,
