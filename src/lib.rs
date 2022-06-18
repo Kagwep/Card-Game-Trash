@@ -63,39 +63,39 @@ struct Players{
 impl  Players {
     pub fn assign(){
 
-           //defines the suits of the cards
-    fn suit_vec() -> Vec<String>{
-        let suit=vec![ "\u{2666}".to_string(), "\u{2665}".to_string(), "\u{2660}".to_string() , "\u{2663}".to_string()];
-        return suit;
-     }
-    // defines the ranks of the cards
-    fn rank_vec() -> Vec<String>{
-        let rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
- 
-        return rank;
-    }
-    // sets to group cards
-    fn card_sets() -> Vec<Vec<String>>{
+            //defines the suits of the cards
+        fn suit_vec() -> Vec<String>{
+            let suit=vec![ "\u{2666}".to_string(), "\u{2665}".to_string(), "\u{2660}".to_string() , "\u{2663}".to_string()];
+            return suit;
+        }
+        // defines the ranks of the cards
+        fn rank_vec() -> Vec<String>{
+            let rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
+    
+            return rank;
+        }
+        // sets to group cards
+        fn card_sets() -> Vec<Vec<String>>{
 
-        let  set1:Vec<String> = Vec::new();
-        let  set2:Vec<String> = Vec::new();
-        let  set3:Vec<String> = Vec::new();
-        let  set4:Vec<String> = Vec::new();
-        let  set5:Vec<String> = Vec::new();
-        let  set6:Vec<String> = Vec::new();
-        let  set7:Vec<String> = Vec::new();
-        let set8:Vec<String> = Vec::new();
-        let  set9:Vec<String> = Vec::new();
-        let  set10:Vec<String> = Vec::new();
-        let  set11:Vec<String> = Vec::new();
-        let  set12:Vec<String> = Vec::new();
-        let  set13:Vec<String> = Vec::new();
-        
-        let vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
-        
-        return vec_con;
-        
-    }
+            let  set1:Vec<String> = Vec::new();
+            let  set2:Vec<String> = Vec::new();
+            let  set3:Vec<String> = Vec::new();
+            let  set4:Vec<String> = Vec::new();
+            let  set5:Vec<String> = Vec::new();
+            let  set6:Vec<String> = Vec::new();
+            let  set7:Vec<String> = Vec::new();
+            let set8:Vec<String> = Vec::new();
+            let  set9:Vec<String> = Vec::new();
+            let  set10:Vec<String> = Vec::new();
+            let  set11:Vec<String> = Vec::new();
+            let  set12:Vec<String> = Vec::new();
+            let  set13:Vec<String> = Vec::new();
+            
+            let vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
+            
+            return vec_con;
+            
+        }
         let mut card = Deck {
             cards:Vec::new(),
         
