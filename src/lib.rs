@@ -61,7 +61,7 @@ struct Players{
 #[near_bindgen]
 // contract 
 impl  Players {
-    pub fn assign(){
+    pub fn assign() -> Players{
 
             //defines the suits of the cards
         fn suit_vec() -> Vec<String>{
@@ -175,7 +175,7 @@ impl  Players {
         
         
         
-        let mut ply = Players{
+        let  ply = Players{
             computer:comp,
             player:play,
             remaining_card_deck:rem,
@@ -194,79 +194,83 @@ impl  Players {
             cardvariant1:aces.to_vec(),
         
         
-        
+       
         };
+        return ply;
     }
     // funtion returns the value equivalent  of the given vec of cards (computer || player)
     pub fn get_card_vec(&self, player:&Vec<String>) -> Vec<u8>{
         //vec to be returned
         let mut decision_vec:Vec<u8> = Vec::new();
+
+        let m = Players::assign();
         // checks
         // this loop returns the value equivalet of the card among the class
         // ACE-Diamond Ace-Spade Ace-Hearts Ace-Clubs will return a value of 1 
         for c in player{
             // value check for a Kings
-            if self.cardvariant13.contains(&c){
+            
+            if m.cardvariant13.contains(&c){
                 decision_vec.push(13);
 
             }
             // value checks for a  Queens
-            else if self.cardvariant12.contains(&c){
+            else if m.cardvariant12.contains(&c){
                 decision_vec.push(12);
 
             }
             // valu checks for a Jacks
-            else if self.cardvariant11.contains(&c){
+            else if m.cardvariant11.contains(&c){
                 decision_vec.push(11);
 
             }
             //value check for a Ten
-            else if self.cardvariant10.contains(&c){
+            else if m.cardvariant10.contains(&c){
                 decision_vec.push(10);
 
             }
             // valu check for a Nine
-            else if self.cardvariant9.contains(&c){
+            else if m.cardvariant9.contains(&c){
                 decision_vec.push(9);
 
             }
             // value check for a Eight
-            else if self.cardvariant8.contains(&c){
+            else if m.cardvariant8.contains(&c){
                 decision_vec.push(8);
 
             }
             //value check for a sevens 
-            else if self.cardvariant7.contains(&c){
+            else if m.cardvariant7.contains(&c){
                 decision_vec.push(7);
 
             }
             // value check for a six
-            else if self.cardvariant6.contains(&c){
+            else if m.cardvariant6.contains(&c){
                 decision_vec.push(6);
 
             }
             //value check for a Five
-            else if self.cardvariant5.contains(&c){
+            else if m.cardvariant5.contains(&c){
                 decision_vec.push(5);
 
             }
             //value check for a four
-            else if self.cardvariant4.contains(&c){
+            else if m.cardvariant4.contains(&c){
                 decision_vec.push(4);
 
             }
             //value check for a Three
-            else if self.cardvariant3.contains(&c){
+            else if m.cardvariant3.contains(&c){
                 decision_vec.push(3);
 
             }
             //value check for a two
-            else if self.cardvariant2.contains(&c){
+            else if m.cardvariant2.contains(&c){
                 decision_vec.push(2);
 
             }
             // value check for Ace
-            else if self.cardvariant1.contains(&c){
+            else if m.cardvariant1.contains(&c){
                 decision_vec.push(1);
 
             }
@@ -281,56 +285,58 @@ impl  Players {
     pub fn get_card_values(&self, card_picked:&String) -> usize{
         // value of card is return
         let value_of_card:usize;
+        let n = Players::assign();
         // checks card value form Ace - King
-            if self.cardvariant13.contains(card_picked){
+            if n.cardvariant13.contains(card_picked){
                 value_of_card = 13;
 
             }
-            else if self.cardvariant12.contains(card_picked){
+            else if n.cardvariant12.contains(card_picked){
                 value_of_card = 12;
 
             }
-            else if self.cardvariant11.contains(card_picked){
+            else if n.cardvariant11.contains(card_picked){
                 value_of_card = 11;
 
             }
-            else if self.cardvariant10.contains(card_picked){
+            else if n.cardvariant10.contains(card_picked){
                 value_of_card = 10;
 
             }
-            else if self.cardvariant9.contains(card_picked){
+            else if n.cardvariant9.contains(card_picked){
                 value_of_card = 9;
 
             }
-            else if self.cardvariant8.contains(card_picked){
+            else if n.cardvariant8.contains(card_picked){
                 value_of_card = 8;
 
             }
-            else if self.cardvariant7.contains(card_picked){
+            else if n.cardvariant7.contains(card_picked){
                 value_of_card = 7;
 
             }
-            else if self.cardvariant6.contains(card_picked){
+            else if n.cardvariant6.contains(card_picked){
                 value_of_card = 6;
 
             }
-            else if self.cardvariant5.contains(card_picked){
+            else if n.cardvariant5.contains(card_picked){
                 value_of_card = 5;
 
             }
-            else if self.cardvariant4.contains(card_picked){
+            else if n.cardvariant4.contains(card_picked){
                 value_of_card = 4;
             }
-            else if self.cardvariant3.contains(card_picked){
+            else if n.cardvariant3.contains(card_picked){
                 value_of_card = 3;
 
             }
-            else if self.cardvariant2.contains(card_picked){
+            else if n.cardvariant2.contains(card_picked){
                 value_of_card = 2;
 
             }
-            else if self.cardvariant1.contains(card_picked){
+            else if n.cardvariant1.contains(card_picked){
                 value_of_card = 1;
+    
 
             }
             else {
@@ -375,7 +381,7 @@ impl  Players {
     }
     
     pub fn play(&mut self, entry:String, cond:String) -> Vec<String>{
-
+        let cp = Players::assign();
         // Hidden cards mimicing cards placed face down 
         //represents cards assigned to players
         let mut hidden_cards:Vec<String> = vec!["X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string(),"X".to_string()];
@@ -384,7 +390,7 @@ impl  Players {
         let done_card:Vec<usize> = Vec::new();
         let c_done_card:Vec<usize> = Vec::new();
         //vector containing the remaining cards 
-        let mut r_cards = self.remaining_card_deck.clone();
+        let mut r_cards = cp.remaining_card_deck.clone();
         //this vector collects cards that have aready been used, picked but not used
         let mut played_cards: Vec<String> = Vec::new();
 
@@ -462,7 +468,7 @@ impl  Players {
                     else{
 
                         // compute the cards and update the cards of the player
-                        hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),self.player.clone());
+                        hidden_cards = self.compute(card_value,done_card.clone(),card.clone().to_string(), hidden_cards.clone(),cp.player.clone());
     
 
                     }
@@ -502,7 +508,7 @@ impl  Players {
             
                         
                         
-                        com_hidden_cards = self.compute(c_card_value,c_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone(),self.computer.clone());
+                        com_hidden_cards = self.compute(c_card_value,c_done_card.clone(),card_c.clone().to_string(), com_hidden_cards.clone(),cp.computer.clone());
             
 
                     }
@@ -661,9 +667,6 @@ mod tests {
             sum +=1;
         
         } 
-        println!("The vector of play is: {:?}",play.clone());
-        println!("The vector of comp is: {:?}",comp.clone());
-        println!("The vector of rem is: {:?}",rem.clone());
         dealt_cards_players.push((&play).to_vec());
         dealt_cards_players.push((&comp).to_vec());
         dealt_cards_players.push((&rem).to_vec());
