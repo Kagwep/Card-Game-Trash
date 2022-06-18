@@ -1,7 +1,10 @@
 use std::vec;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::near_bindgen;
+use near_sdk::{near_bindgen, log};
 use std::collections::HashSet;
+use near_sdk::env;
+
+
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
@@ -15,7 +18,6 @@ struct  Deck{
 #[near_bindgen]
 // Generating card deck of 52 cards
 impl Deck{
-    
     // argument rank will be the rank of the 13 cards: King, Queen, Jack, 10, 9, 8, 7, 6, 5, 4, 3, 2, Ace
     // argument suit passes the suits of the cards: Diamond, King, Queen, Jack
     pub fn card_deck(&mut self, rank:Vec<String>, suit:Vec<String>) -> Vec<String>{
@@ -209,7 +211,7 @@ impl  Players {
             //This loop checks whether a player has picked a card in the their deck and its equivalent position is taken
             //E.g players turn will end when he picks Seven of Diamonds but a Seven of clubs already filled the spot
             if done_card.contains(&card_value){
-                println!("You aready filled that spot");
+                env::log_str("You aready filled that spot");
                 //returns the updated players vector
                 return com_hidden_cards;
             }
@@ -247,9 +249,6 @@ impl  Players {
         let mut r_cards = self.remaining_card_deck.clone();
         //this vector collects cards that have aready been used, picked but not used
         let mut played_cards: Vec<String> = Vec::new();
-        println!(" You are the computer!!!: \n {:?}",self.computer);
-        println!(" You are the player!!!: \n {:?}",self.player);
-        println!(" You are the remainder!!!: \n {:?}",self.remaining_card_deck);
 
     // loop that makes sure the game continues untill a winner is found
      loop{
@@ -262,13 +261,13 @@ impl  Players {
        // checks whether Player/user has won
         if a.len() == 10{
 
-             println!(" You are the winner!!!: \n {:?}",hidden_cards);
+            log!(" You are the winner!!!: \n {:?}",hidden_cards);
              return hidden_cards;
         }
         //checks whether computer has won 
         if b.len() == 10{
 
-            println!(" I am  the winner!!!: \n {:?}",com_hidden_cards);
+            log!(" I am  the winner!!!: \n {:?}",com_hidden_cards);
             return com_hidden_cards;
        }
        // incase the remaining cards after dealing are used during game play, 
@@ -304,10 +303,10 @@ impl  Players {
                     played_cards.push((&card).to_string());
                 }
 
-                println!("Remaining card deck is: {:?}",r_cards);
+                log!("Remaining card deck is: {:?}",r_cards);
                 // if card of the same rank has been used , next players round
                 if a.contains(&card_x){
-                    println!("spot filled");
+                    env::log_str("spot filled");
                     played_cards.push((&card).to_string());
                     // push card to played cards
                 }
@@ -318,7 +317,7 @@ impl  Players {
                     //check whether  cards is used
                     if self.get_card_vec(&hidden_cards).contains(&ci){
 
-                        println!("spot also filled");
+                        env::log_str("spot also filled");
                         played_cards.push((&card).to_string());
 
                     }
@@ -342,7 +341,7 @@ impl  Players {
                 let card_y = card_value.clone() as u8;
 
                 if b.contains(&card_y){
-                    println!("spot filled");
+                    env::log_str("spot filled");
                     played_cards.push((&card_c).to_string());
 
                 }
@@ -353,7 +352,7 @@ impl  Players {
 
                     if self.get_card_vec(&com_hidden_cards).contains(&cv){
 
-                        println!("spot also filled");
+                        env::log_str("spot also filled");
                         played_cards.push((&card_c).to_string());
 
                     }
@@ -377,7 +376,7 @@ impl  Players {
             }
             else{
     
-                println!("Invalid input .... press 1 to pick card .");
+                env::log_str("Invalid input .... press 1 to pick card .");
     
             }
 
