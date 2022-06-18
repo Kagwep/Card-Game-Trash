@@ -61,6 +61,142 @@ struct Players{
 #[near_bindgen]
 // contract 
 impl  Players {
+    pub fn assign(){
+
+           //defines the suits of the cards
+    fn suit_vec() -> Vec<String>{
+        let suit=vec![ "\u{2666}".to_string(), "\u{2665}".to_string(), "\u{2660}".to_string() , "\u{2663}".to_string()];
+        return suit;
+     }
+    // defines the ranks of the cards
+    fn rank_vec() -> Vec<String>{
+        let rank = vec!["K".to_string(), "Q".to_string(), "J".to_string(), "10".to_string(), "9".to_string(), "8".to_string(), "7".to_string(), "6".to_string(), "5".to_string(), "4".to_string(), "3".to_string(), "2".to_string(), "A".to_string()];
+ 
+        return rank;
+    }
+    // sets to group cards
+    fn card_sets() -> Vec<Vec<String>>{
+
+        let  set1:Vec<String> = Vec::new();
+        let  set2:Vec<String> = Vec::new();
+        let  set3:Vec<String> = Vec::new();
+        let  set4:Vec<String> = Vec::new();
+        let  set5:Vec<String> = Vec::new();
+        let  set6:Vec<String> = Vec::new();
+        let  set7:Vec<String> = Vec::new();
+        let set8:Vec<String> = Vec::new();
+        let  set9:Vec<String> = Vec::new();
+        let  set10:Vec<String> = Vec::new();
+        let  set11:Vec<String> = Vec::new();
+        let  set12:Vec<String> = Vec::new();
+        let  set13:Vec<String> = Vec::new();
+        
+        let vec_con = vec![set1,set2,set3,set4,set5,set6,set7,set8,set9,set10,set11,set12,set13];
+        
+        return vec_con;
+        
+    }
+        let mut card = Deck {
+            cards:Vec::new(),
+        
+        };
+        
+        let cards_to_deal_unshuffled= card.card_deck(rank_vec(), suit_vec());
+        let group_cards_vec = cards_to_deal_unshuffled.clone();
+        let mut cards_to_deal = cards_to_deal_unshuffled;
+        let shuffled: HashSet<String> = cards_to_deal.into_iter().collect();
+        cards_to_deal = shuffled.into_iter().collect();
+        
+        let mut sum:u8 = 0;
+        let mut comp:Vec<String> = Vec::new();
+        let mut play:Vec<String> = Vec::new();
+        let mut rem:Vec<String> = Vec::new();
+        let mut count:u8 = 0;
+        for i in &cards_to_deal{
+            if sum<20{
+        
+                if count % 2 == 0 {
+                    play.push(i.to_string());
+          
+                }
+                else{
+                    comp.push(i.to_string());
+        
+                }
+            }
+        
+            else  {
+                let necs = &cards_to_deal[sum as usize];
+                rem.push(necs.to_string());
+            }
+           
+            count +=1;
+            sum +=1;
+        
+        }
+            
+        let mut count_1:usize = 0;
+        
+        let mut vec_of_all_sets :Vec<Vec<String>>= Vec::new();
+        
+        
+        for mut val in card_sets() {
+        
+            let s = &group_cards_vec[count_1+0];
+            let g = &group_cards_vec[count_1+13];
+            let h = &group_cards_vec[count_1+26];
+            let i = &group_cards_vec[count_1+39];
+        
+        
+             val.push(s.to_string());
+             val.push(g.to_string());
+             val.push(h.to_string());
+             val.push(i.to_string());
+        
+            vec_of_all_sets.push(val);
+            count_1 += 1;
+        
+        }
+        
+        let kings = &vec_of_all_sets[0];
+        let queens = &vec_of_all_sets[1];
+        let jacks = &vec_of_all_sets[2];
+        let ten = &vec_of_all_sets[3];
+        let nine = &vec_of_all_sets[4];
+        let eight = &vec_of_all_sets[5];
+        let seven = &vec_of_all_sets[6];
+        let six = &vec_of_all_sets[7];
+        let five = &vec_of_all_sets[8];
+        let fours = &vec_of_all_sets[9];
+        let thress = &vec_of_all_sets[10];
+        let twos = &vec_of_all_sets[11];
+        let aces = &vec_of_all_sets[12]; 
+        
+        
+        
+        
+        let mut ply = Players{
+            computer:comp,
+            player:play,
+            remaining_card_deck:rem,
+            cardvariant13:kings.to_vec(),
+            cardvariant12:queens.to_vec(),
+            cardvariant11:jacks.to_vec(),
+            cardvariant10:ten.to_vec(),
+            cardvariant9:nine.to_vec(),
+            cardvariant8:eight.to_vec(),
+            cardvariant7:seven.to_vec(),
+            cardvariant6:six.to_vec(),
+            cardvariant5:five.to_vec(),
+            cardvariant4:fours.to_vec(),
+            cardvariant3:thress.to_vec(),
+            cardvariant2:twos.to_vec(),
+            cardvariant1:aces.to_vec(),
+        
+        
+        
+        };
+    }
     // funtion returns the value equivalent  of the given vec of cards (computer || player)
     pub fn get_card_vec(&self, player:&Vec<String>) -> Vec<u8>{
         //vec to be returned
